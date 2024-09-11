@@ -10,5 +10,5 @@ int main()
     cin >> x;
     cout << "섭씨온도 = " << (5.0/9.0)*(x-32) << endl;
 
-    return 0;
+    return 0; 
 }
