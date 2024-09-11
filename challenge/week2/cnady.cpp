@@ -12,5 +12,5 @@ int main()
     cout << "최대로 살 수 있는 캔디 = " << x/y << endl;
     cout << "캔디 구입 후 남은 돈 = " << x%y << endl;
 
-    return 0; 
+    return 0;
 }
