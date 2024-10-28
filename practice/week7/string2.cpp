@@ -1,5 +1,5 @@
 #include <iostream>
-#include <string>
+#include <string> //std 라는 표준 네임 스페이스 사용을 위해 선언
 using namespace std;
 
 int main(){
