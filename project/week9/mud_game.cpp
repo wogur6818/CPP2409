@@ -12,9 +12,17 @@ bool checkXY(int user_x, int mapX, int user_y, int mapY);
 void displayMap(vector<vector<int>> &map, int user_x, int user_y);
 bool checkGoal(vector<vector<int>> &map, int user_x, int user_y);
 void interactWithTile(vector<vector<int>> &map, int user_x, int user_y);
+bool CheckUser(const User &user);
 
 // 메인 함수
 int main() {
+    vector<User> users;
+    int num_users;
+
+    cout << "게임에 참여할 유저 수를 입력하세여 : ";
+    for(int i = 0; i<num_users;i++){
+        users.push_back(User());
+    }
     // 0은 빈 공간, 1은 아이템, 2는 적, 3은 포션, 4는 목적지
     vector<vector<int>> map= { {0, 1, 2, 0, 4},
                             {1, 0, 0, 2, 0},
@@ -23,11 +31,13 @@ int main() {
                             {3, 0, 0, 0, 2} };
 
     // 유저의 위치를 저장할 변수
-    int user_x = 0; // 가로 번호
-    int user_y = 0; // 세로 번호
+    vector<int> user_x(num_users, 0); // 가로 번호
+    vector<int> user_y(num_users, 0); // 세로 번호
+
+    bool gmae_over = false;
 
     // 게임 시작 
-    while (true) { // 사용자에게 계속 입력받기 위해 무한 루프
+    while (!game_over) { // 사용자에게 계속 입력받기 위해 무한 루프
         // HP가 0이면 종료
         if (userHP <= 0) {
             cout << "HP가 0이 되어 게임에 실패했습니다." << endl;
