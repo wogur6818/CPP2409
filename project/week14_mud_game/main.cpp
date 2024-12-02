@@ -1,23 +1,24 @@
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <vector>
 #include "user.h"
 
 using namespace std;
 
-// 맵 크기
-const int map_x = 5;
-const int map_y = 5;
+// 맵 크기 초기화
+int map_x = 0;
+int map_y = 0;
 
-// 사용자 정의 함수
 bool CheckXY(int user_x, int map_x, int user_y, int map_y);
 void DisplayMap(const vector<vector<int>> &map, int user_x, int user_y, const string &player_icon);
 bool CheckGoal(const vector<vector<int>> &map, int user_x, int user_y);
 void InteractWithTile(vector<vector<int>> &map, int user_x, int user_y, User &user);
+vector<vector<int>> LoadMap(const string &filename); // 맵 로드함수 선언
 
 // 메인 함수
 int main() {
-    User *player = null_ptr;
+    User *player = nullptr;
 
     // 직업 선택
     cout << "직업(숫자)을 선택하세요 (1: Magician, 2: Warrior): ";
@@ -39,14 +40,17 @@ int main() {
         return 1;
     }
 
-    // 맵 초기화
-    vector<vector<int>> map = {
-        {0, 1, 2, 0, 4},
-        {1, 0, 0, 2, 0},
-        {0, 0, 0, 0, 0},
-        {0, 2, 3, 0, 0},
-        {3, 0, 0, 0, 2}
-    };
+    // 맵 로드(map.txt에서 맵 로드)
+    vector<vector<int>> map;
+    try {
+        map = LoadMap("map.txt");
+        map_y = map.size();
+        map_x = map[0].size();
+    } catch (const exception &e) { // 예외 발생 시 실행하는 예외 문
+        cout << "맵 로드 중 오류 발생: " << e.what() << endl;
+        delete player;
+        return 1;
+    }
 
     int user_x = 0; // 플레이어의 x 좌표
     int user_y = 0; // 플레이어의 y 좌표
@@ -117,6 +121,34 @@ int main() {
     return 0;
 }
 
+// 맵 로드 함수 정의
+vector<vector<int>> LoadMap(const string &filename) {
+    ifstream file(filename);
+    if (!file) {
+        throw runtime_error("맵 파일을 열 수 없습니다.");
+    }
+
+    vector<vector<int>> map;
+    string line;
+    while (getline(file, line)) {
+        vector<int> row;
+        for (char c : line) {
+            if (isdigit(c)) {
+                row.push_back(c - '0');
+            }
+        }
+        if (!row.empty()) {
+            map.push_back(row);
+        }
+    }
+
+    if (map.empty()) {
+        throw runtime_error("맵 데이터가 비어 있습니다.");
+    }
+
+    return map;
+}
+
 // 맵 표시 함수
 void DisplayMap(const vector<vector<int>> &map, int user_x, int user_y, const string &player_icon) {
     for (int i = 0; i < map.size(); i++) {
@@ -162,8 +194,6 @@ void InteractWithTile(vector<vector<int>> &map, int user_x, int user_y, User &us
         case 3:
             cout << "포션을 발견했습니다! 체력을 회복합니다." << endl;
             user.IncreaseHP(5);
-            break;
-        case 4:
             break;
         default:
             cout << "아무것도 없습니다." << endl;
